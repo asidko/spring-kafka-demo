@@ -1,0 +1,23 @@
+logging:
+  level:
+    com.example.demo: DEBUG
+
+spring:
+  application:
+    name: simple-kafka-demo-app
+
+  kafka:
+    bootstrap-servers: localhost:9093 # Kafka will start automatically on port 9093 by compose.yml
+
+    producer:
+      client-id: ${spring.application.name} # prefix for producer name
+
+      topics: # Custom property for producer topics names
+        person-email-updates: com.example.person.email.events
+
+    consumer:
+      group-id: ${spring.application.name} # prefix for consumer name
+
+      topics: # Custom property for consumer topics names
+        # Payload example: {"id: 1001, "email": "john.doe@gmail.com"}
+        person-email-updates: com.example.person.email.events
