@@ -28,3 +28,13 @@ Features. Everything from Simple, plus:
 
 There are minimum files here, so you can see more code at a glance, 
 but do not forget to keep a good project structure.
+
+Additional notes:
+
+- Kafka messages unique identifiers.
+  Consider having some translation UUID field in your Kafka message headers or as a message key, 
+  you will be able to look for all operations related to this identifier.
+
+- You should ensure that every log has context information.  
+  Consider adding a user identifiers, such as id or email in headers,  
+  to be able to log it even before parsing and processing the message.

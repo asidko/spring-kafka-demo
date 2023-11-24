@@ -8,19 +8,69 @@ spring:
     name: simple-kafka-demo-app
     instance-id: ${spring.application.name}-${random.uuid} # Custom property for instance id
 
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/test
+      username: test
+      password: test
 
   kafka:
-    bootstrap-servers: localhost:9093 # Kafka will start automatically on port 9093 by compose.yml
+    bootstrap-servers: localhost:29092 # Kafka will start automatically on port 29092 by compose.yml
     client-id: ${spring.application.instance-id}
 
     producer:
-      topics: # Custom property for producer topics names
+      # Custom property for producer topics names
+      topics:
         person-email-updates: com.example.person.email.events
 
-    consumer:
-      group-id: ${spring.application.name}
-      auto-offset-reset: latest
+      # Serializer for the key.
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # Default: StringSerializer
+      # Serializer for the value.
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer # Default: StringSerializer
+      # The number of acknowledgments the producer requires the leader to have received before considering a request complete.
+      # Defaults to "1". Options: "0" (no acks), "1" (only leader), "all" (full ISR).
+      acks: 1 # Default: 1
+      # The number of times to retry sending a failed message.
+      retries: 3 # Default: Integer.MAX_VALUE
 
+    consumer:
       topics: # Custom property for consumer topics names
         # Payload example: {"id: 1001, "email": "john.doe@gmail.com"}
         person-email-updates: com.example.person.email.events
+
+      # Unique string identifying the consumer group. No default, must be set if group management is used.
+      group-id: ${spring.application.name}
+      # If true, the consumer's offset will be periodically committed in the background.
+      enable-auto-commit: true # Default: true
+      # Deserializer for the key.
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Default: StringDeserializer
+      # Deserializer for the value.
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Default: StringDeserializer
+      # What to do when there is no initial offset.
+      # Options: "earliest", "none".
+      # Be caution, when connecting to an existing topic.
+      # earliest - process all messaged from the beginning
+      # latest   - processing only new messages
+      auto-offset-reset: latest # Default: latest
+      # The maximum number of records returned in a single call to poll().
+      max-poll-records: 100 # Default: 500
+
+    listener:
+      # Ack mode determines when the consumer offset is committed.
+      # Options: "RECORD", "BATCH", "TIME", "COUNT", "COUNT_TIME", "MANUAL", "MANUAL_IMMEDIATE".
+      # RECORD - auto commit after each record processed
+      # BATCH  - single commit for all records returned by pool()
+      # MANUAL - need manual call of acknowledgment.acknowledge(), MANUAL_IMMEDIATE - avoid any acknowledge batching
+      # TIME   - commit by time period, default ack-time: 5s
+      # COUNT  - commit by records processed count, default ack-count: 10
+      # COUNT_TIME - use both
+      ack-mode: COUNT_TIME # Default: BATCH
+      # Period for TIME mode
+      ack-time: 1s # Default 5s
+      # Count for COUNT mode
+      ack-count: 3 # Default 10
+      # Number of threads to run in the listener containers. Probably ignored with Java 21 virtual threads
+      # Concurrency makes practical sense only if there are at least a few partitions in the topic
+      concurrency: 2 # Default: 1, should match the partitions count
+      # Idle time between polls if the listener does not receive any records.
+      poll-timeout: 3s # Default: 1s
