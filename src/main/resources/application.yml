@@ -1,6 +1,7 @@
 logging:
   level:
     com.example.demo: DEBUG
+    org.apache.kafka: WARN
 
 spring:
   application:

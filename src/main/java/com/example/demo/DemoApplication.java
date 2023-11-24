@@ -34,7 +34,7 @@ public class DemoApplication {
 
     @SneakyThrows
     public static void sleep() {
-        Thread.sleep(10000);
+        Thread.sleep(5000);
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -45,7 +45,7 @@ public class DemoApplication {
 
         new Thread(() -> {
             sleep();
-            log.debug("Sending some message to person-email-updates after application is started");
+            log.debug("Sending a message to person-email-updates after application is started");
             kafkaTemplate.send(producerTopics.personEmailUpdates(), """
                     {
                       "id": 1001,
