@@ -5,18 +5,20 @@ logging:
 spring:
   application:
     name: simple-kafka-demo-app
+    instance-id: ${spring.application.name}-${random.uuid} # Custom property for instance id
+
 
   kafka:
     bootstrap-servers: localhost:9093 # Kafka will start automatically on port 9093 by compose.yml
+    client-id: ${spring.application.instance-id}
 
     producer:
-      client-id: ${spring.application.name} # prefix for producer name
-
       topics: # Custom property for producer topics names
         person-email-updates: com.example.person.email.events
 
     consumer:
-      group-id: ${spring.application.name} # prefix for consumer name
+      group-id: ${spring.application.name}
+      auto-offset-reset: latest
 
       topics: # Custom property for consumer topics names
         # Payload example: {"id: 1001, "email": "john.doe@gmail.com"}

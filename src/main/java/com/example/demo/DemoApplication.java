@@ -13,8 +13,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-@SpringBootApplication
 @Slf4j
+@SpringBootApplication
 @RequiredArgsConstructor
 @ConfigurationPropertiesScan
 public class DemoApplication {
@@ -25,9 +25,7 @@ public class DemoApplication {
     ) {}
 
     private final KafkaTemplate<String, String> kafkaTemplate;
-
     private final ProducerTopicProperties producerTopics;
-
     private final PersonEmailUpdatesHandler personEmailUpdatesHandler;
 
     public static void main(String[] args) {
@@ -59,7 +57,7 @@ public class DemoApplication {
 
     @KafkaListener(topics = "${spring.kafka.consumer.topics.person-email-updates}")
     public void listen(String message) {
-        // Check it out in the integration test
+        log.debug("Message was received, payload: {}", message);
         personEmailUpdatesHandler.handle(message);
     }
 
@@ -67,7 +65,8 @@ public class DemoApplication {
     @Slf4j
     public static class PersonEmailUpdatesHandler {
         public void handle(String message) {
-            log.debug("Message received and handled for person-email-updates, message: {}", message);
+            log.debug("Message was handled, payload: {}", message);
         }
     }
 }
+
