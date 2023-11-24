@@ -2,13 +2,13 @@
 
 Demo project to show Spring Kafka usage in real life scenarios.
 
-### Requirements:
+### Requirements
 * Java 17 (we have Spring Boot 3 on the board)
 * Docker up & running
 
 ### Structure
 
-There are two branches...
+There are two branches in this repository...
 
 **Simple** - shows minimal implementation to start with
 
