@@ -41,7 +41,7 @@ public class DemoApplication {
     public void run() {
         log.info("Application is started");
 
-        // Place to run some code
+        // Place to play with some code
 
         new Thread(() -> {
             sleep();
@@ -65,7 +65,7 @@ public class DemoApplication {
     @Slf4j
     public static class PersonEmailUpdatesHandler {
         public void handle(String message) {
-            log.debug("Message was handled, payload: {}", message);
+            log.debug("Handling the message: {}", message);
         }
     }
 }
