@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -33,6 +34,10 @@ class MessageHandlerTest {
     @ServiceConnection
     static final KafkaContainer kafka = new KafkaContainer(parse("confluentinc/cp-kafka:7.4.3"))
             .withEnv("KAFKA_AUTO_CREATE_TOPICS_ENABLE", "true");
+
+    @Container
+    @ServiceConnection
+    static final MongoDBContainer mongo = new MongoDBContainer(parse("mongo:4.4.2"));
 
     @SpyBean
     private DemoApplication.PersonEmailUpdatesHandler personEmailUpdatesHandler;
