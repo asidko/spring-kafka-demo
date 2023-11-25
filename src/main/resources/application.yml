@@ -10,17 +10,19 @@ spring:
 
 
   kafka:
-    bootstrap-servers: localhost:9093 # Kafka will start automatically on port 9093 by compose.yml
+    bootstrap-servers: localhost:29092 # Kafka will start automatically on port 29092 by compose.yml
     client-id: ${spring.application.instance-id}
 
     producer:
-      topics: # Custom property for producer topics names
+      # Custom property for producer topics names
+      topics:
         person-email-updates: com.example.person.email.events
 
     consumer:
-      group-id: ${spring.application.name}
-      auto-offset-reset: latest
-
-      topics: # Custom property for consumer topics names
+      # Custom property for consumer topics names
+      topics:
         # Payload example: {"id: 1001, "email": "john.doe@gmail.com"}
         person-email-updates: com.example.person.email.events
+
+      # Unique string identifying the consumer group. No default, must be set if group management is used.
+      group-id: ${spring.application.name}

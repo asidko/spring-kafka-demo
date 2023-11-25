@@ -11,12 +11,15 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @SpringBootApplication
 @RequiredArgsConstructor
 @ConfigurationPropertiesScan
+@EnableAsync
 public class DemoApplication {
 
     @ConfigurationProperties(prefix = "spring.kafka.producer.topics")
@@ -33,26 +36,28 @@ public class DemoApplication {
     }
 
     @SneakyThrows
-    public static void sleep() {
-        Thread.sleep(5000);
+    public static void sleep(long sec) {
+        log.warn("Sleeping for {} sec.", sec);
+        Thread.sleep(sec * 1000);
     }
 
     @EventListener(ApplicationReadyEvent.class)
+    @Async // use separate thread to not block the main
     public void run() {
-        log.info("Application is started");
+        log.warn("<PLAYGROUND> Application is started");
 
         // Place to play with some code
 
-        new Thread(() -> {
-            sleep();
-            log.debug("Sending a message to person-email-updates after application is started");
-            kafkaTemplate.send(producerTopics.personEmailUpdates(), """
-                    {
-                      "id": 1001,
-                      "email": "john.doe@gmail.com"
-                    }
-                    """);
-        }, "some-msg-thread").start();
+        sleep(5);
+
+        // Sending some initial message
+        log.debug("Sending a message to person-email-updates after application is started");
+        kafkaTemplate.send(producerTopics.personEmailUpdates(), """
+                {
+                  "id": 1001,
+                  "email": "john.doe.init@gmail.com"
+                }
+                """);
     }
 
     @KafkaListener(topics = "${spring.kafka.consumer.topics.person-email-updates}")
@@ -65,7 +70,8 @@ public class DemoApplication {
     @Slf4j
     public static class PersonEmailUpdatesHandler {
         public void handle(String message) {
-            log.debug("Handling the message: {}", message);
+            log.debug("Handling started for the input message: {}", message);
+            log.debug("Handling successfully finished for the input message: {}", message);
         }
     }
 }
