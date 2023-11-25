@@ -11,8 +11,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/test
-      username: test
-      password: test
+      auto-index-creation: true
 
   kafka:
     bootstrap-servers: localhost:29092 # Kafka will start automatically on port 29092 by compose.yml

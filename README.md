@@ -24,7 +24,6 @@ Features. Everything from Simple, plus:
 - Full properties for consumer and producer in `application.yaml`
 - Retries for consumer
 - Failed messages are logged and saved to MongoDB
-- Reprocessing Scheduler
 
 There are minimum files here, so you can see more code at a glance, 
 but do not forget to keep a good project structure.

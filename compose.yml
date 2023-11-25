@@ -24,9 +24,5 @@ services:
 
   mongodb:
     image: mongo:4.4.2
-    environment:
-      MONGO_INITDB_DATABASE: test
-      MONGO_INIT_ROOT_USERNAME: test
-      MONGO_INIT_ROOT_PASSWORD: test
     ports:
       - "27017:27017"
